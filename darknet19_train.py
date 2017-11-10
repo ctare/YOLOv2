@@ -36,8 +36,14 @@ backup_file = "%s/backup.model" % (backup_path)
 if os.path.isfile(backup_file):
     serializers.load_hdf5(backup_file, model) # load saved model
 model.predictor.train = True
-cuda.get_device(0).use()
-model.to_gpu() # for gpu
+
+can_use_gpu = False
+try:
+    cuda.get_device(0).use()
+    model.to_gpu() # for gpu
+    can_use_gpu = True
+except:
+    # ignored
 
 optimizer = optimizers.MomentumSGD(lr=learning_rate, momentum=momentum)
 optimizer.use_cleargrads()
@@ -65,10 +71,12 @@ for batch in range(max_batches):
     one_hot_t = []
     for i in range(len(t)):
         one_hot_t.append(t[i][0]["one_hot_label"])
-    x.to_gpu()
+    if can_use_gpu:
+        x.to_gpu()
     one_hot_t = np.array(one_hot_t, dtype=np.float32)
     one_hot_t = Variable(one_hot_t)
-    one_hot_t.to_gpu()
+    if can_use_gpu:
+        one_hot_t.to_gpu()
 
     y, loss, accuracy = model(x, one_hot_t)
     print("[batch %d (%d images)] learning rate: %f, loss: %f, accuracy: %f" % (batch+1, (batch+1) * batch_size, optimizer.lr, loss.data, accuracy.data))

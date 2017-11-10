@@ -70,8 +70,8 @@ def random_overlay_image(src_image, overlay_image, minimum_crop):
     overlay_h, overlay_w = overlay_image.shape[:2]
     shift_item_h, shift_item_w = overlay_h * (1-minimum_crop), overlay_w * (1-minimum_crop)
     scale_item_h, scale_item_w = overlay_h * (minimum_crop*2-1), overlay_w * (minimum_crop*2-1)
-    y = int(np.random.randint(src_h-scale_item_h) - shift_item_h)
-    x = int(np.random.randint(src_w-scale_item_w) - shift_item_w)
+    y = int(np.random.randint(max(1, src_h-scale_item_h)) - shift_item_h)
+    x = int(np.random.randint(max(1, src_w-scale_item_w)) - shift_item_w)
     image = overlay(src_image, overlay_image, x, y)
     bbox = ((np.maximum(x, 0), np.maximum(y, 0)), (np.minimum(x+overlay_w, src_w-1), np.minimum(y+overlay_h, src_h-1)))
 

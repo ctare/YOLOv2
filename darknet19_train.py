@@ -44,6 +44,7 @@ try:
     can_use_gpu = True
 except:
     # ignored
+    pass
 
 optimizer = optimizers.MomentumSGD(lr=learning_rate, momentum=momentum)
 optimizer.use_cleargrads()

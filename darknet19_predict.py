@@ -18,8 +18,11 @@ label_file = "./data/label.txt"
 image_file = args.path
 
 # read labels
-with open(label_file, "r") as f:
-    labels = f.read().strip().split("\n")
+# with open(label_file, "r") as f:
+#     labels = f.read().strip().split("\n")
+import pickle
+with open("darknet19_final_label.pkl", "rb") as f:
+    labels = pickle.load(f)
 
 # read image
 print("loading image...")
